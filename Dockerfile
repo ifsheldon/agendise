@@ -36,6 +36,9 @@ RUN su - evolve -c 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.gith
 # Add Homebrew to system-wide PATH
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
 
+# 3.3 Install Oh My Zsh
+RUN su - evolve -c 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
+
 # 4. SSH Configuration
 RUN mkdir /var/run/sshd
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
