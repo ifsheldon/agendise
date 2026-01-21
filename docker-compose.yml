@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  ubuntu-ssh:
+    build: .
+    container_name: ubuntu-ssh
+    hostname: ubuntu-dev
+    environment:
+      - USER_PASSWORD=evolve@NAS!
+      - TZ=Asia/Singapore
+    volumes:
+      # This volume will store ~/.cargo, ~/.bun, code, etc.
+      - ubuntu_home:/home/evolve
+    ports:
+      - "17788:22"
+      - "17790-17799:17790-17799"
+    restart: unless-stopped
+
+volumes:
+  ubuntu_home:
+
