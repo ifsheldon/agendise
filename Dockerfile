@@ -23,6 +23,19 @@ RUN usermod -l evolve -d /home/evolve -m ubuntu \
     && echo "evolve ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && chsh -s /bin/zsh evolve
 
+# 3.1 Install uv (Python dependency manager) globally
+ENV UV_INSTALL_DIR="/usr/local/bin"
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 3.2 Install Homebrew
+# Create the directory for Homebrew and give ownership to 'evolve'
+RUN mkdir -p /home/linuxbrew/.linuxbrew \
+    && chown -R evolve:evolve /home/linuxbrew/.linuxbrew
+# Install Homebrew as 'evolve'
+RUN su - evolve -c 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+# Add Homebrew to system-wide PATH
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
+
 # 4. SSH Configuration
 RUN mkdir /var/run/sshd
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
