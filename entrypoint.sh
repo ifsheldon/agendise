@@ -117,6 +117,9 @@ if [ ! -d "/home/linuxbrew/.linuxbrew" ]; then
         echo "" >> "$ZSHRC"
         echo "# Homebrew" >> "$ZSHRC"
         echo "$BREW_SHELLENV" >> "$ZSHRC"
+        echo "" >> "$ZSHRC"
+        echo "# NPM global packages" >> "$ZSHRC"
+        echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$ZSHRC"
         chown "$USER_NAME:$USER_NAME" "$ZSHRC"
     fi
 else
@@ -126,6 +129,8 @@ fi
 
 # 9. Install/Update global NPM packages
 if command -v /home/linuxbrew/.linuxbrew/bin/node &> /dev/null; then
+    # Configure npm to use ~/.npm-global for global packages
+    su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global'
     echo "Installing/Updating global NPM packages: ${NPM_PACKAGES[*]}..."
     for pkg in "${NPM_PACKAGES[@]}"; do
         su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && npm install -g '"$pkg"
