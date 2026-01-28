@@ -49,7 +49,7 @@ logs:
 
 # SSH into the container
 ssh:
-    ssh -p 17788 evolve@localhost
+    ssh -p 18888 evolve@localhost
 
 # Show container status
 status:
