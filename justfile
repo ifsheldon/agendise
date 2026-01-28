@@ -47,9 +47,9 @@ restart-clean:
 logs:
     sudo docker compose logs -f
 
-# SSH into the container
+# SSH into the container (skip host key checking since container rebuilds change keys)
 ssh:
-    ssh -p 18888 evolve@localhost
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 18888 evolve@localhost
 
 # Show container status
 status:
