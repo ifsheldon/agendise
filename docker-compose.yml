@@ -12,8 +12,8 @@ services:
       # Bind mount to sparse image (mounted at /mnt/agent_storage on host)
       - /mnt/agent_storage:/home/evolve
     ports:
-      - "17788:22"
-      - "17790-17799:17790-17799"
+      - "18888:22"
+      - "18890-18899:18890-18899"
     restart: unless-stopped
     deploy:
       resources:
