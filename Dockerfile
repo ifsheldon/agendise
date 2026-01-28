@@ -27,18 +27,12 @@ RUN usermod -l evolve -d /home/evolve -m ubuntu \
 RUN mkdir /var/run/sshd
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-# 5. Copy setup files to ~/setup_files (excluding agent_docs)
-COPY --chown=evolve:evolve Dockerfile README.md docker-compose.yml entrypoint.sh /home/evolve/setup_files/
+# 5. Stage files for copying to home at runtime (after volume mount)
+RUN mkdir -p /opt/agent_init/setup_files
+COPY --chown=evolve:evolve Dockerfile README.md docker-compose.yml entrypoint.sh /opt/agent_init/setup_files/
+COPY --chown=evolve:evolve agent_docs/ /opt/agent_init/
 
-# 6. Copy agent_docs to ~/
-COPY --chown=evolve:evolve agent_docs/ /home/evolve/
-
-# 7. Create NAME, MEMORIES, SKILLS
-RUN touch /home/evolve/NAME \
-    && mkdir -p /home/evolve/MEMORIES /home/evolve/SKILLS \
-    && chown -R evolve:evolve /home/evolve/NAME /home/evolve/MEMORIES /home/evolve/SKILLS
-
-# 8. Copy Entrypoint
+# 6. Copy Entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 

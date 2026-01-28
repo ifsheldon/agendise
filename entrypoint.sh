@@ -29,6 +29,28 @@ echo "$USER_NAME:$USER_PASS" | chpasswd
 # (Crucial because Docker volume mounts often mess up ownership)
 chown -R "$USER_NAME:$USER_NAME" "/home/$USER_NAME"
 
+# 2.5 Initialize home directory (copy staged files if not present)
+INIT_DIR="/opt/agent_init"
+HOME_DIR="/home/$USER_NAME"
+if [ -d "$INIT_DIR" ]; then
+    # Copy setup_files if not present
+    if [ ! -d "$HOME_DIR/setup_files" ]; then
+        echo "Copying setup_files..."
+        cp -r "$INIT_DIR/setup_files" "$HOME_DIR/"
+    fi
+    # Copy README.md if not present
+    if [ ! -f "$HOME_DIR/README.md" ] && [ -f "$INIT_DIR/README.md" ]; then
+        echo "Copying README.md..."
+        cp "$INIT_DIR/README.md" "$HOME_DIR/"
+    fi
+    # Create NAME, MEMORIES, SKILLS if not present
+    [ ! -f "$HOME_DIR/NAME" ] && touch "$HOME_DIR/NAME"
+    [ ! -d "$HOME_DIR/MEMORIES" ] && mkdir -p "$HOME_DIR/MEMORIES"
+    [ ! -d "$HOME_DIR/SKILLS" ] && mkdir -p "$HOME_DIR/SKILLS"
+    # Fix ownership
+    chown -R "$USER_NAME:$USER_NAME" "$HOME_DIR"
+fi
+
 # 3. Configure Git
 echo "Configuring Git..."
 su - "$USER_NAME" -c "git config --global user.name '$USER_NAME'"
