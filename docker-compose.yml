@@ -9,8 +9,8 @@ services:
       - USER_PASSWORD=evolve@NAS!
       - TZ=Asia/Singapore
     volumes:
-      # This volume will store ~/.cargo, ~/.bun, code, etc.
-      - ubuntu_home:/home/evolve
+      # Bind mount to sparse image (mounted at /mnt/agent_storage on host)
+      - /mnt/agent_storage:/home/evolve
     ports:
       - "17788:22"
       - "17790-17799:17790-17799"
@@ -20,7 +20,3 @@ services:
         limits:
           cpus: '8'
           memory: 16G
-
-volumes:
-  ubuntu_home:
-
