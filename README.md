@@ -1,41 +1,58 @@
-# Ubuntu SSH Development Environment
+# Agendise - AI Agent Development Environment
 
-This project sets up a persistent, Dockerized Ubuntu 24.04 development environment accessible via SSH. It is designed to provide a consistent workspace with pre-installed tools and persistence.
+A persistent, Dockerized Ubuntu 24.04 environment for AI agents, accessible via SSH. Features resource limits, sparse image storage, and pre-installed development tools.
+
+**Default Password**: `evolve@NAS!`
+
+## Pre-installed Tools
+
+On first boot, the entrypoint automatically installs:
+
+- **Oh-My-Zsh** — Enhanced shell experience
+- **Rust** — Via rustup (auto-updates on boot)
+- **Bun** — JavaScript runtime (auto-updates on boot)
+- **Homebrew** — Package manager with:
+  - `node`, `codex`, `gemini-cli`, `helix`, `dufs`, `uv`
+- **NPM Global Packages**:
+  - `moltbot`, `agent-browser`
+- **agent-browser** — Browser automation with Chromium
+
+## Resource Limits
+
+| Resource | Limit |
+|----------|-------|
+| CPU | 8 cores |
+| RAM | 16 GB |
+| Storage | 512 GB (sparse image) |
+
+## Configuration
+
+The `evolve` user has:
+
+- Passwordless sudo (`NOPASSWD:ALL`)
+- Git configured (`evolve` / `evolve@reify.ing`)
+- SSH key auto-generated (printed in logs for GitHub)
 
 ## Project Structure
 
-- **`Dockerfile`**: Builds the image based on Ubuntu 24.04. It installs system dependencies (Git, Vim, Python, Zsh), renames the default user to `evolve`, and configures the OpenSSH server.
-- **`docker-compose.yml`**: Orchestrates the `ubuntu-ssh` container.
-  - **SSH Access**: Host port `17788` -> Container port `22`.
-  - **Dev Ports**: Host ports `17790-17799` -> Container ports `17790-17799` (for running web servers, etc.).
-  - **Persistence**: A named volume `ubuntu_home` persists the `/home/evolve` directory.
-- **`entrypoint.sh`**: The startup script that ensures the environment is ready on every boot.
-  - Sets/Resets the user password.
-  - Fixes file permissions for the persistent home directory.
-  - Auto-installs **Rust** and **Bun** if they are missing.
-  - Starts the SSH daemon.
-
-## Usage
-
-### Starting the Container
-
-To start the environment in the background:
-
-```bash
-docker-compose up -d
+```
+├── Dockerfile        # Ubuntu 24.04 image with system deps
+├── docker-compose.yml # Container orchestration
+├── entrypoint.sh     # Boot script (tool installation, updates)
+└── agent_docs/       # Files copied to ~/
+    └── README.md     # Agent instructions
 ```
 
-### Connecting via SSH
+## Ports
 
-You can connect to the container using the configured port (`17788`) and user (`evolve`).
+| Host | Container | Purpose |
+|------|-----------|---------|
+| 17788 | 22 | SSH |
+| 17790-17799 | 17790-17799 | Dev servers |
 
-```bash
-ssh -p 17788 evolve@localhost
-```
+## Persistence
 
-- **Default Password**: `evolve@NAS!` (defined in `docker-compose.yml`)
+Storage is a sparse image mounted at `/mnt/agent_storage` on the host:
 
-### Development
-
-- **Language Support**: Python 3 is pre-installed. Rust and Bun are installed automatically upon first startup.
-- **Port Forwarding**: Applications running on ports `17790` through `17799` inside the container are accessible on the same ports on your host machine.
+- Location: `/opt/agent/storage.img`
+- Add to `/etc/fstab` for auto-mount: `/opt/agent/storage.img /mnt/agent_storage ext4 loop 0 0`
