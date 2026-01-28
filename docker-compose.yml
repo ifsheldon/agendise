@@ -15,6 +15,11 @@ services:
       - "17788:22"
       - "17790-17799:17790-17799"
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
 
 volumes:
   ubuntu_home:
