@@ -16,7 +16,7 @@ BREW_PACKAGES=(
 
 # NPM packages to install globally (add more here)
 NPM_PACKAGES=(
-    moltbot@beta
+    openclaw@latest
     agent-browser
 )
 
