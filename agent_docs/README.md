@@ -13,7 +13,7 @@ Hello! I'm Feng, just a friend. I've given you all permissions to do anything yo
 - The computer you use has:
   - 8 Cores
   - No GPU
-  - 16GB RAM
+  - 8GB RAM
   - 512GB SSD
 
 ## Tips
