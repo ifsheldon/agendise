@@ -12,6 +12,7 @@ BREW_PACKAGES=(
     helix
     dufs
     uv
+    zellij
 )
 
 # NPM packages to install globally (add more here)
