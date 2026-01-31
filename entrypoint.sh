@@ -148,6 +148,14 @@ fi
 # 11. Generate Host Keys
 ssh-keygen -A
 
-echo "Ready! SSH listening on port 22..."
+# 12. Configure SSH to listen on port 18888
+sed -i 's/^#Port 22/Port 18888/' /etc/ssh/sshd_config
+sed -i 's/^Port 22/Port 18888/' /etc/ssh/sshd_config
+# Add Port if not present
+if ! grep -q "^Port " /etc/ssh/sshd_config; then
+    echo "Port 18888" >> /etc/ssh/sshd_config
+fi
+
+echo "Ready! SSH listening on port 18888..."
 exec "$@"
 
