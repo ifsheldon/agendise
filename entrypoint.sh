@@ -146,16 +146,15 @@ if command -v /home/linuxbrew/.linuxbrew/bin/node &> /dev/null; then
     su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && agent-browser install --with-deps' || echo "agent-browser setup skipped or failed"
 fi
 
-# 11. Generate Host Keys
+# 11. Generate Host Keys and prepare SSH
 ssh-keygen -A
+# Fedora requires this directory for privilege separation
+mkdir -p /run/sshd
 
-# 12. Configure SSH to listen on port 18888
-sed -i 's/^#Port 22/Port 18888/' /etc/ssh/sshd_config
-sed -i 's/^Port 22/Port 18888/' /etc/ssh/sshd_config
-# Add Port if not present
-if ! grep -q "^Port " /etc/ssh/sshd_config; then
-    echo "Port 18888" >> /etc/ssh/sshd_config
-fi
+# 12. Configure SSH to listen on port 18888 (use drop-in config for Fedora)
+mkdir -p /etc/ssh/sshd_config.d
+echo "Port 18888" > /etc/ssh/sshd_config.d/99-custom-port.conf
+echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/99-custom-port.conf
 
 echo "Ready! SSH listening on port 18888..."
 exec "$@"
