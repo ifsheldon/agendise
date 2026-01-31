@@ -143,7 +143,7 @@ fi
 # 10. Setup agent-browser (install Chromium + Linux deps)
 if command -v /home/linuxbrew/.linuxbrew/bin/node &> /dev/null; then
     echo "Setting up agent-browser..."
-    su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && agent-browser install --with-deps' || echo "agent-browser setup skipped or failed"
+    su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && export PATH="$HOME/.npm-global/bin:$PATH" && agent-browser install --with-deps' || echo "agent-browser setup skipped or failed"
 fi
 
 # 11. Generate Host Keys and prepare SSH
