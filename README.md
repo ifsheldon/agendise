@@ -45,12 +45,7 @@ The `evolve` user has:
 
 ## Network
 
-Uses **host network mode** — container shares the host's network stack directly.
-
-| Port | Purpose |
-|------|---------|
-| 18888 | SSH |
-| 18890-18899 | Dev servers |
+Uses **host network mode** — container shares the host's network stack directly. Use port 18888 for SSH.
 
 - Container can access host services via `localhost`
 - No port mapping needed; ports bind directly to host
