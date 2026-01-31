@@ -1,6 +1,6 @@
 # Agendise - AI Agent Development Environment
 
-A persistent, Dockerized Ubuntu 24.04 environment for AI agents, accessible via SSH. Features resource limits, sparse image storage, and pre-installed development tools.
+A persistent, Dockerized Fedora 43 environment for AI agents, accessible via SSH. Features resource limits, sparse image storage, host networking, and pre-installed development tools.
 
 **Default Password**: `evolve@NAS!`
 
@@ -12,9 +12,9 @@ On first boot, the entrypoint automatically installs:
 - **Rust** — Via rustup (auto-updates on boot)
 - **Bun** — JavaScript runtime (auto-updates on boot)
 - **Homebrew** — Package manager with:
-  - `node`, `codex`, `gemini-cli`, `helix`, `dufs`, `uv`
+  - `node`, `codex`, `gemini-cli`, `helix`, `dufs`, `uv`, `zellij`
 - **NPM Global Packages**:
-  - `moltbot`, `agent-browser`
+  - `openclaw`, `agent-browser`
 - **agent-browser** — Browser automation with Chromium
 
 ## Resource Limits
@@ -22,7 +22,7 @@ On first boot, the entrypoint automatically installs:
 | Resource | Limit |
 |----------|-------|
 | CPU | 8 cores |
-| RAM | 16 GB |
+| RAM | 8 GB |
 | Storage | 512 GB (sparse image) |
 
 ## Configuration
@@ -36,19 +36,39 @@ The `evolve` user has:
 ## Project Structure
 
 ```
-├── Dockerfile        # Ubuntu 24.04 image with system deps
+├── Dockerfile         # Fedora 43 image with system deps
 ├── docker-compose.yml # Container orchestration
-├── entrypoint.sh     # Boot script (tool installation, updates)
-└── agent_docs/       # Files copied to ~/
-    └── README.md     # Agent instructions
+├── entrypoint.sh      # Boot script (tool installation, updates)
+└── agent_docs/        # Files copied to ~/
+    └── README.md      # Agent instructions
 ```
 
-## Ports
+## Network
 
-| Host | Container | Purpose |
-|------|-----------|---------|
-| 18888 | 22 | SSH |
-| 17790-17799 | 17790-17799 | Dev servers |
+Uses **host network mode** — container shares the host's network stack directly.
+
+| Port | Purpose |
+|------|---------|
+| 18888 | SSH |
+| 18890-18899 | Dev servers |
+
+- Container can access host services via `localhost`
+- No port mapping needed; ports bind directly to host
+
+## Commands
+
+Manage the container using [just](https://github.com/casey/just):
+
+| Command | Description |
+|---------|-------------|
+| `just setup` | Initial setup — creates sparse image, mounts storage, builds & starts container |
+| `just start` | Mount storage and start container |
+| `just stop` | Stop container |
+| `just restart` | Restart container |
+| `just restart-clean` | Full reset — recreates sparse image and rebuilds container |
+| `just logs` | Follow container logs |
+| `just ssh` | SSH into container (auto-skips host key check) |
+| `just status` | Show container status and storage usage |
 
 ## Persistence
 
