@@ -8,9 +8,15 @@ services:
     environment:
       - USER_PASSWORD=evolve@NAS!
       - TZ=Asia/Singapore
+      # - WGPU_BACKEND=vulkan # force vulkan
     volumes:
       # Bind mount to sparse image (mounted at /mnt/agent_storage on host)
       - /mnt/agent_storage:/home/evolve
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+      - render
     network_mode: "host"
     restart: unless-stopped
     deploy:

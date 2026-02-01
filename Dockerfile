@@ -12,6 +12,8 @@ RUN dnf group install -y development-tools \
     dbus-libs libdrm mesa-libgbm gtk3 nspr nss \
     pango libXcomposite libXdamage libXfixes \
     libxkbcommon libXrandr xorg-x11-server-Xvfb \
+    # Vulkan/wgpu support for Intel iGPU
+    mesa-vulkan-drivers vulkan-tools vulkan-loader \
     && dnf clean all
 
 # 2. Setup Locale
