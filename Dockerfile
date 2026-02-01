@@ -20,8 +20,8 @@ RUN dnf group install -y development-tools \
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 
-# 3. Create 'evolve' user with UID 1000
-RUN useradd -m -u 1000 -s /bin/zsh evolve \
+# 3. Create 'evolve' user with UID 1000 and add to video/render groups for GPU access
+RUN useradd -m -u 1000 -s /bin/zsh -G video,render evolve \
     && echo "evolve ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # 4. SSH Configuration (port and password auth handled in entrypoint.sh)
