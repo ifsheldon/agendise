@@ -8,7 +8,6 @@ services:
     environment:
       - USER_PASSWORD=evolve@NAS!
       - TZ=Asia/Singapore
-      - SSH_PORT=18889
       # - WGPU_BACKEND=vulkan # force vulkan
     volumes:
       # Bind mount to sparse image (mounted at /mnt/agent_storage on host)
@@ -18,7 +17,9 @@ services:
     group_add:
       - video
       - render
-    network_mode: "host"
+    ports:
+      - "18889:22"
+      - "18790:18789"
     restart: unless-stopped
     deploy:
       resources:

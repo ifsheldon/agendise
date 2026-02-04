@@ -151,12 +151,11 @@ ssh-keygen -A
 # Fedora requires this directory for privilege separation
 mkdir -p /run/sshd
 
-# 12. Configure SSH port (use drop-in config for Fedora)
-SSH_PORT_NUM=${SSH_PORT:-18888}
+# 12. Configure SSH (use drop-in config for Fedora)
 mkdir -p /etc/ssh/sshd_config.d
-echo "Port $SSH_PORT_NUM" > /etc/ssh/sshd_config.d/99-custom-port.conf
+echo "Port 22" > /etc/ssh/sshd_config.d/99-custom-port.conf
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/99-custom-port.conf
 
-echo "Ready! SSH listening on port $SSH_PORT_NUM..."
+echo "Ready! SSH listening on port 22 (use docker port mapping for external access)..."
 exec "$@"
 
