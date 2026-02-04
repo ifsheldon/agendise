@@ -1,8 +1,8 @@
 # Justfile for managing the agent container with sparse image storage
 
 # Configuration
-STORAGE_IMAGE := "/opt/agent/storage.img"
-MOUNT_POINT := "/mnt/agent_storage"
+STORAGE_IMAGE := "/opt/agent/storage2.img"
+MOUNT_POINT := "/mnt/agent_storage2"
 STORAGE_SIZE := "512G"
 
 # Start the container (mount storage first if needed)
@@ -49,7 +49,7 @@ logs:
 
 # SSH into the container (skip host key checking since container rebuilds change keys)
 ssh:
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 18888 evolve@localhost
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 18889 evolve@localhost
 
 # Show container status
 status:

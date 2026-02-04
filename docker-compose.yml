@@ -3,15 +3,16 @@ version: '3.8'
 services:
   fedora-ssh:
     build: .
-    container_name: agendise
-    hostname: fedora-dev
+    container_name: agendise2
+    hostname: fedora-dev2
     environment:
       - USER_PASSWORD=evolve@NAS!
       - TZ=Asia/Singapore
+      - SSH_PORT=18889
       # - WGPU_BACKEND=vulkan # force vulkan
     volumes:
       # Bind mount to sparse image (mounted at /mnt/agent_storage on host)
-      - /mnt/agent_storage:/home/evolve
+      - /mnt/agent_storage2:/home/evolve
     devices:
       - /dev/dri:/dev/dri
     group_add:
