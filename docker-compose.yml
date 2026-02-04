@@ -20,6 +20,7 @@ services:
     ports:
       - "18889:22"
       - "18790:18789"
+      - "23000:3000"
     restart: unless-stopped
     deploy:
       resources:
