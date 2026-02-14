@@ -87,7 +87,11 @@ if [ ! -d "/home/$USER_NAME/.cargo" ]; then
     su - "$USER_NAME" -c "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
 else
     echo "Rust is already installed. Updating..."
-    su - "$USER_NAME" -c "source ~/.cargo/env && rustup update stable"
+    if ! su - "$USER_NAME" -c "source ~/.cargo/env && rustup update stable"; then
+        echo "Rust update failed. Reinstalling..."
+        rm -rf "/home/$USER_NAME/.rustup" "/home/$USER_NAME/.cargo"
+        su - "$USER_NAME" -c "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+    fi
 fi
 
 # 7. Install Bun (if missing from persistent home)
