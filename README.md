@@ -69,5 +69,5 @@ Manage the container using [just](https://github.com/casey/just):
 
 Storage is a sparse image mounted at `/mnt/agent_storage` on the host:
 
-- Location: `/opt/agent/storage.img`
-- Add to `/etc/fstab` for auto-mount: `/opt/agent/storage.img /mnt/agent_storage ext4 loop 0 0`
+- Location: `/volume1/agent/storage2.img`
+- Add to `/etc/fstab` for auto-mount: `/volume1/agent/storage2.img /mnt/agent_storage ext4 loop 0 0`
