@@ -21,6 +21,28 @@ NPM_PACKAGES=(
     agent-browser
 )
 
+# Ensure brew PATH + npm prefix are loaded for the evolve shell (idempotent)
+ensure_brew_shellenv_block() {
+    local shellenv='eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+    local zshrc="/home/$USER_NAME/.zshrc"
+
+    if [ ! -f "$zshrc" ]; then
+        su - "$USER_NAME" -c 'touch ~/.zshrc'
+    fi
+
+    if ! grep -qF "$shellenv" "$zshrc" 2>/dev/null; then
+        {
+            echo ""
+            echo "# Homebrew"
+            echo "$shellenv"
+            echo ""
+            echo "# NPM global packages"
+            echo 'export PATH="$HOME/.npm-global/bin:$PATH"'
+        } >> "$zshrc"
+        chown "$USER_NAME:$USER_NAME" "$zshrc"
+    fi
+}
+
 echo "Starting up..."
 
 # 1. Set Password (every boot, in case env var changes)
@@ -114,22 +136,11 @@ if [ ! -d "/home/linuxbrew/.linuxbrew" ]; then
     # Install packages with brew
     echo "Installing Homebrew packages: ${BREW_PACKAGES[*]}..."
     su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && brew install '"${BREW_PACKAGES[*]}"
-    # Add brew to .zshrc for future sessions
-    BREW_SHELLENV='eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-    ZSHRC="/home/$USER_NAME/.zshrc"
-    if ! grep -qF "$BREW_SHELLENV" "$ZSHRC" 2>/dev/null; then
-        echo "Adding brew to .zshrc..."
-        echo "" >> "$ZSHRC"
-        echo "# Homebrew" >> "$ZSHRC"
-        echo "$BREW_SHELLENV" >> "$ZSHRC"
-        echo "" >> "$ZSHRC"
-        echo "# NPM global packages" >> "$ZSHRC"
-        echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$ZSHRC"
-        chown "$USER_NAME:$USER_NAME" "$ZSHRC"
-    fi
+    ensure_brew_shellenv_block
 else
     echo "Homebrew is already installed. Upgrading..."
     su - "$USER_NAME" -c 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && brew upgrade'
+    ensure_brew_shellenv_block
 fi
 
 # 9. Install/Update global NPM packages
@@ -162,4 +173,3 @@ echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/99-custom-port.conf
 
 echo "Ready! SSH listening on port 18888..."
 exec "$@"
-
