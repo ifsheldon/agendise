@@ -1,7 +1,7 @@
 # Justfile for managing the agent container with sparse image storage
 
 # Configuration
-STORAGE_IMAGE := "/opt/agent/storage.img"
+STORAGE_IMAGE := "/volume1/agent/storage.img"
 MOUNT_POINT := "/mnt/agent_storage"
 STORAGE_SIZE := "512G"
 
